@@ -1,15 +1,15 @@
 ---
 title: "Weight of Fish"
-author: "Your Name"
-date: "`r Sys.Date()`"  
-output: 
+author: "Sierra Green"
+date: "11/24/2021"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
   html_document:
-    number_sections: true
-    toc: true
+    number_sections: yes
+    toc: yes
     toc_depth: 5
-
- 
-    
 ---
 
 
@@ -20,20 +20,79 @@ require(tidyverse)
 
 # Predicting Fish Weight
 
+```{r}
+Perch<- filter(Fish, Species=="Perch")
+Perch<- select(Perch,-Species)
+```
 
 ## Perch
 
+
+
 ### Best Models
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Perch,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
 
 ### Best Two regressor model
+```{r}
+model3<- lm(Length~ .-Neck.G-Weight-Age,data=Bears)
+summary.lm(model3)
+```
 
 
+```{r}
+model4<- lm(Length~ .-Neck.G-Weight-Age-Head.W,data=Bears)
+summary.lm(model4)
+```
 ## Pike
 
+```{r}
+Pike<- filter(Fish, Species=="Pike")
+Pike<- select(Pike,-Species)
+```
+
 ### Best Models
 
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Pike,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
 ### Best Two regressor model
 
+```{r}
+model3<- lm(Length~ .-Neck.G-Weight-Age,data=Bears)
+summary.lm(model3)
+```
+
+```{r}
+model4<- lm(Length~ .-Neck.G-Weight-Age-Head.W,data=Bears)
+summary.lm(model4)
+```
 ## Roach
 
 ### Best Models
