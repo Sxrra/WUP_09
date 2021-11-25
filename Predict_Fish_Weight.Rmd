@@ -94,9 +94,38 @@ model4<- lm(Length~ .-Neck.G-Weight-Age-Head.W,data=Bears)
 summary.lm(model4)
 ```
 ## Roach
+```{r}
+Roach<- filter(Fish, Species=="Roach")
+Roach<- select(Roach,-Species)
+```
 
 ### Best Models
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Roach,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
 
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
 ### Best Two regressor model
+```{r}
+model3<- lm(Length~ .-Neck.G-Weight-Age,data=bears)
+summary.lm(model3)
+```
 
+```{r}
+model4<- lm(Length~ .-Neck.G-Weight-Age-Head.W,data=bears)
+summary.lm(model4)
+```
 ## Final Summary Statements
+
+
+Modeli 3 and 4 best estimates the different types of fishes weight.
